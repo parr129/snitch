@@ -1,0 +1,32 @@
+Rating,NLP_Tag,Category,Return_Reason
+4.5,Excellent quality,Fashion,Tight Fit
+2.0,Size Issue,Fashion,Size Mismatch
+1.5,Color Mismatch,Fashion,Wrong Color
+5.0,Perfect fit,Electronics,None
+3.5,Delayed delivery,Fashion,Late Delivery
+4.0,Quick service,Home,None
+2.5,Size Issue,Fashion,Size Mismatch
+3.0,Color Mismatch,Footwear,Wrong Color
+4.8,Very comfortable,Footwear,None
+1.0,Defective screen,Electronics,Defective Item
+4.2,Lightweight material,Fashion,None
+2.8,Missing accessories,Electronics,Missing Parts
+4.7,Good battery life,Electronics,None
+3.5,Fits well,Fashion,None
+1.2,Torn item received,Fashion,Defective Item
+4.9,Premium finish,Fashion,None
+3.0,Poor stitching,Fashion,Defective Item
+4.6,Satisfied purchase,Footwear,None
+2.0,Color fades after wash,Fashion,Color Fade
+3.8,Responsive touch screen,Electronics,None
+1.0,Broken zip,Fashion,Defective Item
+4.3,Accurate description,Home,None
+3.2,Color mismatch,Fashion,Wrong Color
+2.5,Bad smell,Footwear,Defective Item
+5.0,Loved it,Fashion,None
+1.8,Button issue,Fashion,Defective Item
+4.1,Neatly packed,Home,None
+3.0,Late delivery,Fashion,Late Delivery
+2.2,Loose fitting,Footwear,Size Mismatch
+4.5,Excellent grip,Footwear,None
+1.7,Broken charger,Electronics,Defective Item
