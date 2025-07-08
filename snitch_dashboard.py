@@ -1,3 +1,5 @@
+# snitch_dashboard.py
+
 import streamlit as st
 import pandas as pd
 import seaborn as sns
@@ -5,7 +7,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import plotly.express as px
 
-# Configure page
+# Streamlit page config
 st.set_page_config(page_title="Customer Review Insights", layout="wide")
 st.title("🧠 Customer Review Insights Dashboard")
 
@@ -17,14 +19,14 @@ Welcome to the smart feedback explorer! Upload your customer reviews in CSV form
 - `Return_Reason` (text)
 """)
 
-# Upload CSV file
+# File upload
 uploaded_file = st.sidebar.file_uploader("📁 Upload Review Data", type=["csv"])
 
-# Load and process data
+# Process uploaded file
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
 
-    # Basic cleanup
+    # Cleanup
     df.dropna(subset=['Rating'], inplace=True)
     df['Rating'] = pd.to_numeric(df['Rating'], errors='coerce')
     df = df[df['Rating'].notnull()]
@@ -42,35 +44,32 @@ if uploaded_file:
         df['Rating'].between(rating_range[0], rating_range[1])
     ]
 
-    # Tabs for organization
+    # Tabs
     tab1, tab2, tab3, tab4 = st.tabs(["📈 Overview", "📋 Category Insights", "🔍 NLP Analysis", "🚚 Return Insights"])
 
-    # --- TAB 1: Overview ---
+    # --- Tab 1: Overview ---
     with tab1:
         st.header("📈 General Metrics")
         col1, col2, col3, col4 = st.columns(4)
-
         with col1:
             st.metric("Avg. Rating", f"{filtered_df['Rating'].mean():.2f} / 5")
-
         with col2:
             st.metric("Total Reviews", len(filtered_df))
-
         with col3:
             st.metric("Unique Categories", filtered_df['Category'].nunique())
-
         with col4:
-            st.metric("Top Return Reason", filtered_df['Return_Reason'].mode().iloc[0] if 'Return_Reason' in filtered_df.columns else "N/A")
+            top_return = filtered_df['Return_Reason'].mode().iloc[0] if 'Return_Reason' in filtered_df.columns and not filtered_df['Return_Reason'].isna().all() else "N/A"
+            st.metric("Top Return Reason", top_return)
 
         st.subheader("🟡 Rating Distribution")
         fig = px.histogram(filtered_df, x='Rating', nbins=20, title="Ratings Histogram", color_discrete_sequence=["#0077b6"])
         st.plotly_chart(fig, use_container_width=True)
 
-    # --- TAB 2: Category Insights ---
+    # --- Tab 2: Category Insights ---
     with tab2:
         st.header("📋 Ratings & Returns by Category")
-
         col1, col2 = st.columns(2)
+
         with col1:
             st.subheader("⭐ Average Rating by Category")
             cat_rating = filtered_df.groupby('Category')['Rating'].mean().reset_index()
@@ -85,11 +84,11 @@ if uploaded_file:
                 sns.heatmap(heat_data, annot=True, fmt='d', cmap="YlOrBr")
                 st.pyplot(fig2)
 
-    # --- TAB 3: NLP Tags ---
+    # --- Tab 3: NLP Tags ---
     with tab3:
         st.header("🔍 NLP Tag Analysis")
-
         st.subheader("Top NLP Tags")
+
         top_tags = filtered_df['NLP_Tag'].value_counts().head(15).reset_index()
         top_tags.columns = ['Tag', 'Count']
         fig3 = px.bar(top_tags, x='Count', y='Tag', orientation='h', color='Count', color_continuous_scale='teal')
@@ -104,20 +103,19 @@ if uploaded_file:
             ax4.axis('off')
             st.pyplot(fig4)
 
-    # --- TAB 4: Return Insights ---
+    # --- Tab 4: Return Reasons ---
     with tab4:
         st.header("🚚 Return Reasons")
-
         if 'Return_Reason' in filtered_df.columns:
             return_counts = filtered_df['Return_Reason'].value_counts().reset_index()
             return_counts.columns = ['Reason', 'Count']
             fig5 = px.pie(return_counts, names='Reason', values='Count', title="Return Reason Distribution", color_discrete_sequence=px.colors.sequential.Oranges)
             st.plotly_chart(fig5, use_container_width=True)
 
-        if 'Rating' in filtered_df.columns and 'Return_Reason' in filtered_df.columns:
             st.subheader("Rating by Return Reason")
             box_data = filtered_df[['Rating', 'Return_Reason']].dropna()
             fig6 = px.box(box_data, x='Return_Reason', y='Rating', color='Return_Reason', title="Rating Spread for Each Return Reason")
             st.plotly_chart(fig6, use_container_width=True)
+
 else:
     st.info("📤 Please upload a CSV file with the columns: `Rating`, `NLP_Tag`, `Category`, `Return_Reason`.")
